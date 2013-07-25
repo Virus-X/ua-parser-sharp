@@ -1,50 +1,23 @@
-﻿using System;
-using System.Linq;
-
-using UAParserSharp;
-
-namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentStringLibrary.Tables
 {
-    public class BrowserOS: UserAgentItem
+    public class BrowserOS : UserAgentItem
     {
         public int OSID { get; set; }
 
-        public BrowserOS()
-        {
-        }
-
-        public override void Intialize(string s)
-        {
-          //[browser_os]--
-          //browser_id[] = "OS id"
-
-          string[] lines = s.Trim().Replace("\r", "").Replace("\"", "").Split(new char[] { '\n' });
-
-          //getID
-          string sID = lines[0].Split('=')[0].Trim().Replace("[]", "");
-          int id;
-          if (!int.TryParse(sID, out id))
-            return;
-          else
-            ID = id;
-
-          //getOther items
-          var x = (from l in lines
-                   select l.Split(new string[] {"[] ="}, StringSplitOptions.None)[1].Trim()).ToArray();
-
-          int osid;
-          if (int.TryParse(x[0], out osid))
-            OSID = osid;
-        }
-
-        public override ParserState GetState()
-        {
-          return ParserState.BrowserOS;
-        }
-
         public override int GetNumberItems()
         {
-          return 1+1;
+            return 1 + 1;
+        }
+
+        protected override void LoadFields(string[] fields)
+        {
+            // [browser_os]--
+            // browser_id[] = "OS id";
+            int osid;
+            if (int.TryParse(fields[0], out osid))
+            {
+                OSID = osid;
+            }
         }
     }
 }

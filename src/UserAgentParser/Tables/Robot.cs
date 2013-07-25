@@ -1,66 +1,40 @@
-﻿using System;
-using System.Linq;
-
-using UAParserSharp;
-
-namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentStringLibrary.Tables
 {
     public class Robot : UserAgentCommon
     {
         public string UserAgentString { get; set; }
+
         public string Family { get; set; }
+
         public string OsID { get; set; }
+
         public string InfoURL { get; set; }
-
-        public override void Intialize(string s)
-        {
-          //; bot_id[] = "bot useragentstring"
-          //; bot_id[] = "bot Family"
-          //; bot_id[] = "bot Name"
-          //; bot_id[] = "bot URL"
-          //; bot_id[] = "bot Company"
-          //; bot_id[] = "bot Company URL"
-          //; bot_id[] = "bot ico"
-          //; bot_id[] = "bot OS id"
-          //; bot_id[] = "bot info URL"
-          string[] lines = s.Trim().Replace("\r","").Replace("\"","").Split(new char[] {'\n'});
-
-          //getID
-          string sID = lines[0].Split('=')[0].Trim().Replace("[]","");
-          int id;
-          if (!int.TryParse(sID, out id))
-            return;
-          else
-            ID = id;
-
-          //getOther items
-          var x = (from l in lines
-                  select l.Split(new string[] {"[] ="}, StringSplitOptions.None)[1].Trim()).ToArray();
-
-          UserAgentString = x[0];
-          Family = x[1];
-          Name = x[2];
-          URL = x[3];
-          Company = x[4];
-          CompanyURL = x[5];
-          Icon = x[6];
-          OsID = x[7];
-          InfoURL = x[8];
-
-        }  
 
         public override int GetNumberItems()
         {
-          return 4+5;
+            return 4 + 5;
         }
 
-        public override ParserState GetState()
+        protected override void LoadFields(string[] fields)
         {
-          return ParserState.Robot;
-        }
-
-        public Robot()
-        {
+            // bot_id[] = "bot useragentstring"
+            // bot_id[] = "bot Family"
+            // bot_id[] = "bot Name"
+            // bot_id[] = "bot URL"
+            // bot_id[] = "bot Company"
+            // bot_id[] = "bot Company URL"
+            // bot_id[] = "bot ico"
+            // bot_id[] = "bot OS id"
+            // bot_id[] = "bot info URL";
+            UserAgentString = fields[0];
+            Family = fields[1];
+            Name = fields[2];
+            URL = fields[3];
+            Company = fields[4];
+            CompanyURL = fields[5];
+            Icon = fields[6];
+            OsID = fields[7];
+            InfoURL = fields[8];
         }
     }
 }

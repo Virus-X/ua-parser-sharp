@@ -9,7 +9,5 @@ namespace UserAgentStringLibrary.Tables
         public string Company { get; set; }
         public string CompanyURL { get; set; }
         public string Icon { get; set; }
-
-
     }
 }
