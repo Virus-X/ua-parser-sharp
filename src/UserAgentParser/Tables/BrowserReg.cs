@@ -1,22 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace UAParserSharp
+using UAParserSharp;
+
+namespace UserAgentStringLibrary.Tables
 {
-    public class BrowserOS: UserAgentItem
+  public class BrowserReg : UserAgentItem
     {
-        public int OSID { get; set; }
+        public string RegString { get; set; }
+        public int BrowserID { get; set; }
 
-        public BrowserOS()
+        public BrowserReg()
         {
         }
 
         public override void Intialize(string s)
         {
-          //[browser_os]--
-          //browser_id[] = "OS id"
+          //[browser_reg]--
+          //browser_reg_id[] = "Browser regstring"
+          //browser_reg_id[] = "Browser id"
 
           string[] lines = s.Trim().Replace("\r", "").Replace("\"", "").Split(new char[] { '\n' });
 
@@ -32,19 +34,21 @@ namespace UAParserSharp
           var x = (from l in lines
                    select l.Split(new string[] {"[] ="}, StringSplitOptions.None)[1].Trim()).ToArray();
 
-          int osid;
-          if (int.TryParse(x[0], out osid))
-            OSID = osid;
-        }
+          RegString = x[0];
+          int browserid;
+          if (int.TryParse(x[1], out browserid))
+            BrowserID = browserid;
 
-        public override State GetState()
+          
+        }
+        public override ParserState GetState()
         {
-          return State.BrowserOS;
+          return ParserState.BrowserReg;
         }
 
         public override int GetNumberItems()
         {
-          return 1+1;
+          return 2;
         }
     }
 }

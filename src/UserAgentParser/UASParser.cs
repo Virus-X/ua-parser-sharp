@@ -42,9 +42,11 @@ namespace UAParserSharp
         private static string iniFileURL = @"http://user-agent-string.info/rpc/get_data.php?key=free&format=ini";
 
         //Paths 
-        public static Uri UAImagesURL = new Uri(@"http://user-agent-string.info/pub/img/ua/");
-        public static Uri OSImagesURL = new Uri(@"http://user-agent-string.info/pub/img/os/");
-        public static Uri UserAgentStringURL = new Uri(@"http://user-agent-string.info/");
+        public static readonly Uri UAImagesURL = new Uri(@"http://user-agent-string.info/pub/img/ua/");
+
+        public static readonly Uri OSImagesURL = new Uri(@"http://user-agent-string.info/pub/img/os/");
+
+        public static readonly Uri UserAgentStringURL = new Uri(@"http://user-agent-string.info/");
 
         private static DataTables dataTable;
 

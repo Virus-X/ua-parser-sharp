@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace UAParserSharp
+using UAParserSharp;
+
+namespace UserAgentStringLibrary.Tables
 {
   public class OS : UserAgentCommon
     {
@@ -50,9 +50,9 @@ namespace UAParserSharp
           Icon = x[5];
         }
 
-        public override State GetState()
+        public override ParserState GetState()
         {
-          return State.OS;
+          return ParserState.OS;
         }
 
     }

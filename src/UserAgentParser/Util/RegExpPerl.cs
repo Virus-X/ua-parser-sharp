@@ -11,12 +11,9 @@
 
 using System;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace UAParserSharp.Util
+namespace UserAgentStringLibrary.Util
 {
 	/// <summary>
 	/// Perl regular expression specific options that are not captured by .NET <see cref="RegexOptions"/> or by

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace UAParserSharp
+using UAParserSharp;
+
+namespace UserAgentStringLibrary.Tables
 {
     public class Robot : UserAgentCommon
     {
@@ -54,9 +54,9 @@ namespace UAParserSharp
           return 4+5;
         }
 
-        public override State GetState()
+        public override ParserState GetState()
         {
-          return State.Robot;
+          return ParserState.Robot;
         }
 
         public Robot()
