@@ -20,20 +20,13 @@ namespace UAParserSharp
 
     public class DataTables
     {
-        public DateTime Created { get; set; }
-
-        public DataTables()
-        {
-            Created = DateTime.Now;
-        }
-
-        public static Dictionary<int, Browser> browsers = new Dictionary<int, Browser>();
-        public static Dictionary<int, BrowserOS> browserOss = new Dictionary<int, BrowserOS>();
-        public static Dictionary<int, BrowserReg> browserRegs = new Dictionary<int, BrowserReg>();
-        public static Dictionary<int, BrowserType> browserTypes = new Dictionary<int, BrowserType>();
-        public static Dictionary<int, OS> oss = new Dictionary<int, OS>();
-        public static Dictionary<int, OSReg> osRegs = new Dictionary<int, OSReg>();
-        public static Dictionary<int, Robot> robots = new Dictionary<int, Robot>();
+        public static readonly Dictionary<int, Browser> Browsers = new Dictionary<int, Browser>();
+        public static readonly Dictionary<int, BrowserOS> BrowserOss = new Dictionary<int, BrowserOS>();
+        public static readonly Dictionary<int, BrowserReg> BrowserRegs = new Dictionary<int, BrowserReg>();
+        public static readonly Dictionary<int, BrowserType> BrowserTypes = new Dictionary<int, BrowserType>();
+        public static readonly Dictionary<int, OS> Oss = new Dictionary<int, OS>();
+        public static readonly Dictionary<int, OSReg> OSRegs = new Dictionary<int, OSReg>();
+        public static readonly Dictionary<int, Robot> Robots = new Dictionary<int, Robot>();
 
         private static ParserState GetState(string s)
         {
@@ -92,11 +85,11 @@ namespace UAParserSharp
                     sb.AppendLine(line);
                 }
             }
+
             if (sb.Length > 0)
             {
                 CreateDictionary(oldstate, sb.ToString());
             }
-
         }
 
         public static string[] Chop(string data, int lineNums)
@@ -131,15 +124,7 @@ namespace UAParserSharp
 
         //This is ugly
         public static void CreateDictionary(ParserState state, string data)
-        {
-            //browsers = new Dictionary<int,Browser>();
-            //browserOss= new Dictionary<int,BrowserOS>();
-            //browserRegs = new Dictionary<int,BrowserReg>();
-            //browserTypes = new Dictionary<int,BrowserType>();
-            //oss = new Dictionary<int,OS>();
-            //osRegs = new Dictionary<int,OSReg>();
-            //robots = new Dictionary<int,Robot>();
-
+        {            
             UserAgentItem uai;
             string[] dataSpliced = null;
 
@@ -147,31 +132,31 @@ namespace UAParserSharp
             {
                 case ParserState.Robot:
                     uai = new Robot();
-                    robots.Clear();
+                    Robots.Clear();
                     break;
                 case ParserState.Browser:
                     uai = new Browser();
-                    browsers.Clear();
+                    Browsers.Clear();
                     break;
                 case ParserState.OS:
                     uai = new OS();
-                    oss.Clear();
+                    Oss.Clear();
                     break;
                 case ParserState.BrowserOS:
                     uai = new BrowserOS();
-                    browserOss.Clear();
+                    BrowserOss.Clear();
                     break;
                 case ParserState.BrowserReg:
                     uai = new BrowserReg();
-                    browserRegs.Clear();
+                    BrowserRegs.Clear();
                     break;
                 case ParserState.BrowserType:
                     uai = new BrowserType();
-                    browserTypes.Clear();
+                    BrowserTypes.Clear();
                     break;
                 case ParserState.OSReg:
                     uai = new OSReg();
-                    osRegs.Clear();
+                    OSRegs.Clear();
                     break;
                 default:
                     return;
@@ -187,43 +172,42 @@ namespace UAParserSharp
                     case ParserState.Robot:
                         uai = new Robot();
                         uai.Intialize(d);
-                        robots.Add(uai.ID, (Robot)uai);
+                        Robots.Add(uai.ID, (Robot)uai);
                         break;
                     case ParserState.Browser:
                         uai = new Browser();
                         uai.Intialize(d);
-                        browsers.Add(uai.ID, (Browser)uai);
+                        Browsers.Add(uai.ID, (Browser)uai);
                         break;
                     case ParserState.OS:
                         uai = new OS();
                         uai.Intialize(d);
-                        oss.Add(uai.ID, (OS)uai);
+                        Oss.Add(uai.ID, (OS)uai);
                         break;
                     case ParserState.BrowserOS:
                         uai = new BrowserOS();
                         uai.Intialize(d);
-                        browserOss.Add(uai.ID, (BrowserOS)uai);
+                        BrowserOss.Add(uai.ID, (BrowserOS)uai);
                         break;
                     case ParserState.BrowserReg:
                         uai = new BrowserReg();
                         uai.Intialize(d);
-                        browserRegs.Add(uai.ID, (BrowserReg)uai);
+                        BrowserRegs.Add(uai.ID, (BrowserReg)uai);
                         break;
                     case ParserState.BrowserType:
                         uai = new BrowserType();
                         uai.Intialize(d);
-                        browserTypes.Add(uai.ID, (BrowserType)uai);
+                        BrowserTypes.Add(uai.ID, (BrowserType)uai);
                         break;
                     case ParserState.OSReg:
                         uai = new OSReg();
                         uai.Intialize(d);
-                        osRegs.Add(uai.ID, (OSReg)uai);
+                        OSRegs.Add(uai.ID, (OSReg)uai);
                         break;
                     default:
                         return;
                 }
             }
-
         }
 
         public void LoadData(string s)

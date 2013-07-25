@@ -2,7 +2,7 @@
 {
     public class OS : UserAgentCommon
     {
-        public string Family { get; set; }
+        public string Family { get; private set; }
 
         public override int GetNumberItems()
         {

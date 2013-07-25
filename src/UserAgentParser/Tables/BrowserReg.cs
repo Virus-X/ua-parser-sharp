@@ -1,14 +1,10 @@
-﻿using System;
-using System.Linq;
-
-
-namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentStringLibrary.Tables
 {
     public class BrowserReg : UserAgentItem
     {
-        public string RegString { get; set; }
+        public string RegString { get; private set; }
 
-        public int BrowserID { get; set; }
+        public int BrowserID { get; private set; }
 
         public override int GetNumberItems()
         {

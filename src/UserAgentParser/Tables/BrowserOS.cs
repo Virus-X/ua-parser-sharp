@@ -2,7 +2,7 @@
 {
     public class BrowserOS : UserAgentItem
     {
-        public int OSID { get; set; }
+        public int OSID { get; private set; }
 
         public override int GetNumberItems()
         {

@@ -2,13 +2,13 @@
 {
     public class Robot : UserAgentCommon
     {
-        public string UserAgentString { get; set; }
+        public string UserAgentString { get; private set; }
 
-        public string Family { get; set; }
+        public string Family { get; private set; }
 
-        public string OsID { get; set; }
+        public string OsID { get; private set; }
 
-        public string InfoURL { get; set; }
+        public string InfoURL { get; private set; }
 
         public override int GetNumberItems()
         {

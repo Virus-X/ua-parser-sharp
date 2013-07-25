@@ -3,7 +3,7 @@ namespace UserAgentStringLibrary.Tables
 {
     public class BrowserType : UserAgentItem
     {
-        public string Type { get; set; }
+        public string Type { get; private set; }
 
         public override int GetNumberItems()
         {

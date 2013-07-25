@@ -4,9 +4,9 @@ namespace UserAgentStringLibrary.Tables
 {
     public class Browser : UserAgentCommon
     {
-        public int TypeID { get; set; }
+        public int TypeID { get; private set; }
 
-        public string InfoURL { get; set; }
+        public string InfoURL { get; private set; }
 
         public override int GetNumberItems()
         {

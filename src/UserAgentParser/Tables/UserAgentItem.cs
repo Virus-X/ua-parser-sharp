@@ -5,7 +5,7 @@ namespace UserAgentStringLibrary.Tables
 {
     public abstract class UserAgentItem
     {
-        public int ID { get; set; }
+        public int ID { get; private set; }
 
         public abstract int GetNumberItems();
 

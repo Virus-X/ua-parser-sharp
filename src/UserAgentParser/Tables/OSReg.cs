@@ -2,9 +2,9 @@
 {
     public class OSReg : UserAgentItem
     {
-        public string RegString { get; set; }
+        public string RegString { get; private set; }
 
-        public int OSID { get; set; }
+        public int OSID { get; private set; }
 
         public override int GetNumberItems()
         {

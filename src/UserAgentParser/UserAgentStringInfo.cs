@@ -52,7 +52,7 @@ namespace UAParserSharp
         {
             //First Robot
             Robot robot = null;
-            foreach (Robot r in DataTables.robots.Values)
+            foreach (Robot r in DataTables.Robots.Values)
             {
                 if (uas.CompareTo(r.UserAgentString) == 0)
                 {
@@ -79,7 +79,7 @@ namespace UAParserSharp
                     int osid;
                     if (int.TryParse(robot.OsID, out osid))
                     {
-                        OS os = DataTables.oss[osid];
+                        OS os = DataTables.Oss[osid];
                         os_company = os.Company;
                         os_company_url = os.CompanyURL;
                         os_family = os.Family;
@@ -96,7 +96,7 @@ namespace UAParserSharp
 
                 //BrowserReg
                 Browser browser = null;
-                foreach (KeyValuePair<int, BrowserReg> br in DataTables.browserRegs)
+                foreach (KeyValuePair<int, BrowserReg> br in DataTables.BrowserRegs)
                 {
                     try
                     {
@@ -108,7 +108,7 @@ namespace UAParserSharp
                         {
                             GroupCollection gc = m.Groups;
 
-                            browser = DataTables.browsers[br.Value.BrowserID];
+                            browser = DataTables.Browsers[br.Value.BrowserID];
                             foreach (Group g in gc)
                             {
                                 string v = null;
@@ -139,7 +139,7 @@ namespace UAParserSharp
                 if (browser != null)
                 {
                     int t = browser.TypeID;
-                    type = DataTables.browserTypes[t].Type;
+                    type = DataTables.BrowserTypes[t].Type;
                     if (ua_name.CompareTo("unknown") == 0)
                         ua_name = browser.Name;
                     else
@@ -153,13 +153,13 @@ namespace UAParserSharp
 
                     OS os = null;
                     //Os - first BrowserOS, 
-                    if (DataTables.browserOss.ContainsKey(browser.ID))
+                    if (DataTables.BrowserOss.ContainsKey(browser.ID))
                     {
-                        os = DataTables.oss[DataTables.browserOss[browser.ID].OSID];
+                        os = DataTables.Oss[DataTables.BrowserOss[browser.ID].OSID];
                     }
                     else //else Os regexp
                     {
-                        foreach (KeyValuePair<int, OSReg> osr in DataTables.osRegs)
+                        foreach (KeyValuePair<int, OSReg> osr in DataTables.OSRegs)
                         {
                             try
                             {
@@ -167,7 +167,7 @@ namespace UAParserSharp
                                 Regex r = prec.Regex;
                                 if (r.IsMatch(uas))
                                 {
-                                    os = DataTables.oss[osr.Value.OSID];
+                                    os = DataTables.Oss[osr.Value.OSID];
                                     break;
                                 }
                             }
