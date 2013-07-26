@@ -1,4 +1,4 @@
-﻿namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentParser.Tables
 {
     public abstract class UserAgentCommon : UserAgentItem
     {

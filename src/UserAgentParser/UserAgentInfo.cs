@@ -1,8 +1,8 @@
 using System;
 
-using UserAgentStringLibrary.Tables;
+using UserAgentParser.Tables;
 
-namespace UAParserSharp
+namespace UserAgentParser
 {
     public class UserAgentInfo
     {

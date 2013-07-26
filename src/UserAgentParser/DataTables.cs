@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using UserAgentStringLibrary.Tables;
+using UserAgentParser.Tables;
 
-namespace UAParserSharp
+namespace UserAgentParser
 {
     public enum ParserState
     {
@@ -180,37 +180,37 @@ namespace UAParserSharp
                 {
                     case ParserState.Robot:
                         uai = new Robot();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         Robots.Add(uai.ID, (Robot)uai);
                         break;
                     case ParserState.Browser:
                         uai = new Browser();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         Browsers.Add(uai.ID, (Browser)uai);
                         break;
                     case ParserState.OS:
                         uai = new OS();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         Oss.Add(uai.ID, (OS)uai);
                         break;
                     case ParserState.BrowserOS:
                         uai = new BrowserOS();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         BrowserOss.Add(uai.ID, (BrowserOS)uai);
                         break;
                     case ParserState.BrowserReg:
                         uai = new BrowserReg();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         BrowserRegs.Add(uai.ID, (BrowserReg)uai);
                         break;
                     case ParserState.BrowserType:
                         uai = new BrowserType();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         BrowserTypes.Add(uai.ID, (BrowserType)uai);
                         break;
                     case ParserState.OSReg:
                         uai = new OSReg();
-                        uai.Intialize(d);
+                        uai.Initialize(d);
                         OSRegs.Add(uai.ID, (OSReg)uai);
                         break;
                     default:

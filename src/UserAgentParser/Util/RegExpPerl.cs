@@ -13,7 +13,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace UserAgentStringLibrary.Util
+namespace UserAgentParser.Util
 {
 	/// <summary>
 	/// Perl regular expression specific options that are not captured by .NET <see cref="RegexOptions"/> or by

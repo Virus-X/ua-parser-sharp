@@ -1,6 +1,6 @@
 using System;
 
-namespace UAParserSharp
+namespace UserAgentParser
 {
     public static class Constants
     {

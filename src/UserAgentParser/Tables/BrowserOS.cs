@@ -1,4 +1,4 @@
-﻿namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentParser.Tables
 {
     public class BrowserOS : UserAgentItem
     {

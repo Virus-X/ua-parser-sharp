@@ -1,4 +1,4 @@
-﻿namespace UAParserSharp
+﻿namespace UserAgentParser
 {
     public class UserAgentString
     {

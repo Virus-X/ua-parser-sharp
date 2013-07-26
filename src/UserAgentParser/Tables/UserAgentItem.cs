@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace UserAgentStringLibrary.Tables
+namespace UserAgentParser.Tables
 {
     public abstract class UserAgentItem
     {
@@ -11,7 +11,7 @@ namespace UserAgentStringLibrary.Tables
 
         protected abstract void LoadFields(string[] fields);
 
-        public virtual void Intialize(string s)
+        public virtual void Initialize(string s)
         {
             string[] lines = s.Trim().Replace("\r", string.Empty).Replace("\"", string.Empty).Split('\n');
 

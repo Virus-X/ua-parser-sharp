@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-using UserAgentStringLibrary.Util;
+using UserAgentParser.Util;
 
-namespace UserAgentStringLibrary.Tables
+namespace UserAgentParser.Tables
 {
     public class OSReg : UserAgentItem
     {

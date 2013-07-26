@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using UAParserSharp;
+using UserAgentParser;
 
-using UserAgentStringLibrary.Tables;
+using UserAgentParser.Tables;
 
 namespace UserAgentParser.Tests
 {

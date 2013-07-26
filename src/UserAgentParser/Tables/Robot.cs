@@ -1,8 +1,6 @@
 ﻿using System;
 
-using UAParserSharp;
-
-namespace UserAgentStringLibrary.Tables
+namespace UserAgentParser.Tables
 {
     public class Robot : UserAgentCommon
     {

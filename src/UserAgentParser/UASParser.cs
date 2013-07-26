@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 
-using UserAgentStringLibrary.Tables;
+using UserAgentParser.Tables;
 
 /*
  * Created by Adam Abonyi
@@ -21,7 +21,7 @@ using UserAgentStringLibrary.Tables;
  *  David Atherton (www.xunity.com) - BugFixes and Refinement
  *  David Mužátko (www.alza.cz) - Bug Report
 */
-namespace UAParserSharp
+namespace UserAgentParser
 {
     /// <summary>
     /// UAS Parser

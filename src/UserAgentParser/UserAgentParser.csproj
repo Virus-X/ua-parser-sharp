@@ -8,8 +8,8 @@
     <ProjectGuid>{E1308FE1-8345-4A64-8AE5-85DDDDB4EDB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UserAgentStringLibrary</RootNamespace>
-    <AssemblyName>UserAgentStringLibrary</AssemblyName>
+    <RootNamespace>UserAgentParser</RootNamespace>
+    <AssemblyName>UserAgentParser</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
