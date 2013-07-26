@@ -4,6 +4,8 @@ using System.Linq;
 using NUnit.Framework;
 using UAParserSharp;
 
+using UserAgentStringLibrary.Tables;
+
 namespace UserAgentParser.Tests
 {
     [TestFixture]
@@ -38,6 +40,20 @@ namespace UserAgentParser.Tests
         {
             var res = parser.Parse(uas);
             Assert.AreEqual(expectedUserAgentName, res.UserAgent.Name);
+        }
+
+        [Test]
+        public void Parse_KnownBrowserString_UserAgentTypeValid()
+        {
+            var res = parser.Parse("Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0.1");
+            Assert.AreEqual(UserAgentType.Browser, res.UserAgent.Type);
+        }
+
+        [Test]
+        public void Parse_KnownMailClientString_UserAgentTypeValid()
+        {
+            var res = parser.Parse("Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8) Gecko/20100802 Lightning/1.0b2 Thunderbird/3.1.2 ThunderBrowse/3.3.2");
+            Assert.AreEqual(UserAgentType.EmailClient, res.UserAgent.Type);
         }
 
         [Test]
