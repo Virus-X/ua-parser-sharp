@@ -125,6 +125,11 @@ namespace UAParserSharp
         /// </summary>
         private void LoadParser()
         {
+            if (dataTable != null && !refresh)
+            {
+                return;
+            }
+
             error = string.Empty;
             try
             {
@@ -133,7 +138,9 @@ namespace UAParserSharp
                 {
                     DirectoryInfo di = new DirectoryInfo(savePath);
                     if (!di.Exists)
-                    { di.Create(); }
+                    {
+                        di.Create();
+                    }
                 }
 
                 //if we don't have any data loaded
