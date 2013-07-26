@@ -1,8 +1,22 @@
-﻿namespace UserAgentStringLibrary.Tables
+﻿using System;
+
+using UAParserSharp;
+
+namespace UserAgentStringLibrary.Tables
 {
     public class OS : UserAgentCommon
     {
+        public static readonly Uri UnknownIconUrl = new Uri(UASParser.OSImagesURL, "unknown.png");
+
         public string Family { get; private set; }
+
+        public Uri IconUrl
+        {
+            get
+            {
+                return string.IsNullOrEmpty(Icon) ? UnknownIconUrl : new Uri(UASParser.OSImagesURL, Icon);
+            }
+        }
 
         public override int GetNumberItems()
         {

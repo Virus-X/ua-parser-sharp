@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using UAParserSharp;
@@ -29,7 +30,7 @@ namespace UserAgentParser.Tests
         public void FixtureSetUp()
         {
             parser = new UASParser(".");
-            parser.GetLatestDataFile();
+            parser.GetNewestVersion();
         }
 
         [Test]
@@ -37,7 +38,7 @@ namespace UserAgentParser.Tests
         public void Parse_KnownString_UserAgentValid(string uas, string expectedUserAgentName)
         {
             var res = parser.Parse(uas);
-            Assert.AreEqual(expectedUserAgentName, res.UAName);
+            Assert.AreEqual(expectedUserAgentName, res.UserAgent.Name);
         }
 
         [Test]
@@ -45,7 +46,35 @@ namespace UserAgentParser.Tests
         public void Parse_KnownString_OsNameValid(string uas, string expectedOsName)
         {
             var res = parser.Parse(uas);
-            Assert.AreEqual(expectedOsName, res.OSName);
+            Assert.AreEqual(expectedOsName, res.OS.Name);
+        }
+
+        [Test]
+        public void Parse_UnknownString_OsNameUnknown()
+        {
+            var res = parser.Parse("???");
+            Assert.AreEqual("Unknown", res.OS.Name);
+        }
+
+        [Test]
+        public void Parse_UnknownString_UserAgentNameUnknown()
+        {
+            var res = parser.Parse("???");
+            Assert.AreEqual("Unknown", res.UserAgent.Name);
+        }
+
+        [Test]
+        public void Parse_UnknownString_UserAgentIconPointsToUnknownPng()
+        {
+            var res = parser.Parse("???");
+            Assert.AreEqual(new Uri(UASParser.UAImagesURL, "unknown.png"), res.UserAgent.IconUrl);
+        }
+
+        [Test]
+        public void Parse_UnknownString_OsIconPointsToUnknownPng()
+        {
+            var res = parser.Parse("???");
+            Assert.AreEqual(new Uri(UASParser.OSImagesURL, "unknown.png"), res.OS.IconUrl);
         }
     }
 }

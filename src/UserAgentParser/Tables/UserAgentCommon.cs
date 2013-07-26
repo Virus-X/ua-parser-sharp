@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentStringLibrary.Tables
 {
     public abstract class UserAgentCommon : UserAgentItem
     {

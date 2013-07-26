@@ -205,33 +205,34 @@ namespace UAParserSharp
         /// </summary>
         /// <param name="uas">User-Agent-String</param>
         /// <returns>UASrt - information about the UAS</returns>
-        public UserAgentStringInfo Parse(string uas)
+        public UserAgentString Parse(string uas)
         {
             Robot robot = DataTables.Robots.Values.FirstOrDefault(x => x.UserAgentString == uas);
 
             if (robot != null)
             {
+                var userAgent = new UserAgentInfo(robot);
+
                 var robotOs = robot.OsID.HasValue && DataTables.Oss.ContainsKey(robot.OsID.Value)
-                             ? DataTables.Oss[robot.OsID.Value]
+                             ? new OsInfo(DataTables.Oss[robot.OsID.Value])
                              : null;
-                return new UserAgentStringInfo(robot, robotOs);
+                return new UserAgentString(uas, userAgent, robotOs);
             }
 
             var browserRes = DetectBrowser(uas);
 
             if (browserRes == null)
             {
-                return new UserAgentStringInfo();
+                return new UserAgentString();
             }
 
             Browser browser = browserRes.Item1;
-            int t = browser.TypeID;
-            var browserType = DataTables.BrowserTypes[t].Type;
+            var browserInfo = new UserAgentInfo(browser, DataTables.BrowserTypes[browser.TypeID].Type, browserRes.Item2);
 
-            OS os = null;
+            OsInfo os = null;
             if (DataTables.BrowserOss.ContainsKey(browser.ID))
             {
-                os = DataTables.Oss[DataTables.BrowserOss[browser.ID].OSID];
+                os = new OsInfo(DataTables.Oss[DataTables.BrowserOss[browser.ID].OSID]);
             }
             else
             {
@@ -241,13 +242,13 @@ namespace UAParserSharp
                     Regex r = prec.Regex;
                     if (r.IsMatch(uas))
                     {
-                        os = DataTables.Oss[osr.OSID];
+                        os = new OsInfo(DataTables.Oss[osr.OSID]);
                         break;
                     }
                 }
             }
 
-            return new UserAgentStringInfo(browser, browserType, browserRes.Item2, os);
+            return new UserAgentString(uas, browserInfo, os);
         }
 
         private static Tuple<Browser, string> DetectBrowser(string uas)

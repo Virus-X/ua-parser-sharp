@@ -1,10 +1,29 @@
-﻿namespace UserAgentStringLibrary.Tables
+﻿using System;
+
+using UAParserSharp;
+
+namespace UserAgentStringLibrary.Tables
 {
     public class Browser : UserAgentCommon
     {
+        public static readonly Uri UnknownIconUrl = new Uri(UASParser.UAImagesURL, "unknown.png");
+
         public int TypeID { get; private set; }
 
         public string InfoURL { get; private set; }
+
+        public Uri IconUrl
+        {
+            get
+            {
+                return string.IsNullOrEmpty(Icon) ? UnknownIconUrl : new Uri(UASParser.UAImagesURL, Icon);
+            }
+        }
+
+        public Uri InfoUrl
+        {
+            get { return new Uri(UASParser.UserAgentStringURL, string.IsNullOrEmpty(InfoURL) ? "unknown" : InfoURL); }
+        }
 
         public override int GetNumberItems()
         {
