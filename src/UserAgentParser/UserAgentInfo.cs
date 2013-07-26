@@ -6,7 +6,9 @@ namespace UAParserSharp
 {
     public class UserAgentInfo
     {
-        public string Type { get; set; }
+        public string TypeName { get; set; }
+
+        public UserAgentType Type { get; set; }
 
         public string Family { get; set; }
 
@@ -33,7 +35,8 @@ namespace UAParserSharp
                     Name = "Unknown",
                     Family = "Unknown",
                     Company = "Unknown",
-                    Type = "Unknown",
+                    TypeName = "Unknown",
+                    Type = UserAgentType.Unknown,
                     IconUrl = Browser.UnknownIconUrl
                 };
             }
@@ -45,7 +48,8 @@ namespace UAParserSharp
 
         public UserAgentInfo(Robot robot)
         {
-            Type = "Robot";
+            Type = UserAgentType.Robot;
+            TypeName = "Robot";
             Name = robot.Name;
             Family = robot.Family;
             Company = robot.Company;
@@ -55,9 +59,10 @@ namespace UAParserSharp
             InfoUrl = robot.InfoUrl;
         }
 
-        public UserAgentInfo(Browser browser, string browserType, string version)
+        public UserAgentInfo(Browser browser, BrowserType type, string version)
         {
-            Type = browserType;
+            Type = type.Type;
+            TypeName = type.TypeName;
             Version = version;
             Name = browser.Name;
             Family = browser.Name;

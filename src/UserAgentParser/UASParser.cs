@@ -231,7 +231,7 @@ namespace UAParserSharp
             }
 
             Browser browser = browserRes.Item1;
-            var browserInfo = new UserAgentInfo(browser, DataTables.BrowserTypes[browser.TypeID].Type, browserRes.Item2);
+            var browserInfo = new UserAgentInfo(browser, DataTables.BrowserTypes[browser.TypeID], browserRes.Item2);
 
             OsInfo os = null;
             if (DataTables.BrowserOss.ContainsKey(browser.ID))
