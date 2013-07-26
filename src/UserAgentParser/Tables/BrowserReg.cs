@@ -1,10 +1,31 @@
-﻿namespace UserAgentStringLibrary.Tables
+﻿using System.Text;
+using System.Text.RegularExpressions;
+
+using UserAgentStringLibrary.Util;
+
+namespace UserAgentStringLibrary.Tables
 {
     public class BrowserReg : UserAgentItem
     {
+        private Regex regex;
+
         public string RegString { get; private set; }
 
         public int BrowserID { get; private set; }
+
+        public Regex Regex
+        {
+            get
+            {
+                if (regex == null)
+                {
+                    PerlRegExpConverter prec = new PerlRegExpConverter(RegString, null, Encoding.ASCII);
+                    regex = prec.Regex;
+                }
+
+                return regex;
+            }
+        }
 
         public override int GetNumberItems()
         {

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
 using UserAgentStringLibrary.Tables;
-using UserAgentStringLibrary.Util;
 
 /*
  * Created by Adam Abonyi
@@ -238,9 +235,7 @@ namespace UAParserSharp
             {
                 foreach (var osr in DataTables.OSRegs.Values)
                 {
-                    PerlRegExpConverter prec = new PerlRegExpConverter(osr.RegString, null, Encoding.ASCII);
-                    Regex r = prec.Regex;
-                    if (r.IsMatch(uas))
+                    if (osr.IsMatch(uas))
                     {
                         os = new OsInfo(DataTables.Oss[osr.OSID]);
                         break;
@@ -255,9 +250,7 @@ namespace UAParserSharp
         {
             foreach (var br in DataTables.BrowserRegs.Values)
             {
-                PerlRegExpConverter prec = new PerlRegExpConverter(br.RegString, null, Encoding.ASCII);
-                Regex r = prec.Regex;
-                Match m = r.Match(uas);
+                Match m = br.Regex.Match(uas);
                 if (m.Success)
                 {
                     GroupCollection gc = m.Groups;

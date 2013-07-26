@@ -1,7 +1,14 @@
-﻿namespace UserAgentStringLibrary.Tables
+﻿using System.Text;
+using System.Text.RegularExpressions;
+
+using UserAgentStringLibrary.Util;
+
+namespace UserAgentStringLibrary.Tables
 {
     public class OSReg : UserAgentItem
     {
+        private Regex regex;
+
         public string RegString { get; private set; }
 
         public int OSID { get; private set; }
@@ -9,6 +16,17 @@
         public override int GetNumberItems()
         {
             return 2;
+        }
+
+        public bool IsMatch(string userAgentString)
+        {
+            if (regex == null)
+            {
+                PerlRegExpConverter prec = new PerlRegExpConverter(RegString, null, Encoding.ASCII);
+                regex = prec.Regex;
+            }
+
+            return regex.IsMatch(userAgentString);
         }
 
         protected override void LoadFields(string[] fields)

@@ -30,7 +30,6 @@ namespace UserAgentParser.Tests
         public void FixtureSetUp()
         {
             parser = new UASParser(".");
-            parser.GetNewestVersion();
         }
 
         [Test]
