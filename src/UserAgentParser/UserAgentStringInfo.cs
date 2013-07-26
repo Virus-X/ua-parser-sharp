@@ -1,200 +1,109 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 
 using UserAgentStringLibrary.Tables;
-using UserAgentStringLibrary.Util;
 
 namespace UAParserSharp
-{    
+{
     public class UserAgentStringInfo
     {
         bool isRobot = false;
 
-        string type = "unknown";
-        string ua_family = "unknown";
-        string ua_name = "unknown";
-        string ua_url = "unknown";
-        string ua_company = "unknown";
-        string ua_company_url = "unknown";
         string ua_icon = "unknown.png";
+
         string ua_info_url = "unknown";
-        string os_family = "unknown";
-        string os_name = "unknown";
-        string os_url = "unknown";
-        string os_company = "unknown";
-        string os_company_url = "unknown";
+
         string os_icon = "unknown.png";
 
-        public string Type { get { return type; } }
-        public string UAFamily { get { return ua_family; } }
-        public string UAName { get { return ua_name; } }
-        public string UAUrl { get { return ua_url; } }
-        public string UACompany { get { return ua_company; } }
-        public string UACompanyUrl { get { return ua_company_url; } }
-        public string UAIcon { get { return (new Uri(UASParser.UAImagesURL, ua_icon)).ToString(); } }
-        public string UAInfoUrl { get { return (new Uri(UASParser.UserAgentStringURL, ua_info_url)).AbsoluteUri; } }
-        public string OSFamily { get { return os_family; } }
-        public string OSName { get { return os_name; } }
-        public string OSUrl { get { return os_url; } }
-        public string OSCompany { get { return os_company; } }
-        public string OSCompanyUrl { get { return os_company_url; } }
-        public string OSIcon { get { return (new Uri(UASParser.OSImagesURL, os_icon)).ToString(); } }
+        public string Type { get; private set; }
 
+        public string UAFamily { get; private set; }
+
+        public string UAName { get; private set; }
+
+        public string UAUrl { get; private set; }
+
+        public string UACompany { get; private set; }
+
+        public string UACompanyUrl { get; private set; }
+
+        public string OSFamily { get; private set; }
+
+        public string OSName { get; private set; }
+
+        public string OSUrl { get; private set; }
+
+        public string OSCompany { get; private set; }
+
+        public string OSCompanyUrl { get; private set; }
+
+        public string UAIcon { get { return (new Uri(UASParser.UAImagesURL, ua_icon)).ToString(); } }
+
+        public string UAInfoUrl { get { return (new Uri(UASParser.UserAgentStringURL, ua_info_url)).AbsoluteUri; } }
+
+        public string OSIcon { get { return (new Uri(UASParser.OSImagesURL, os_icon)).ToString(); } }
 
         public UserAgentStringInfo()
         {
-
+            OSCompanyUrl = "unknown";
+            OSCompany = "unknown";
+            OSUrl = "unknown";
+            OSName = "unknown";
+            OSFamily = "unknown";
+            UACompanyUrl = "unknown";
+            UACompany = "unknown";
+            UAUrl = "unknown";
+            UAName = "unknown";
+            UAFamily = "unknown";
+            Type = "unknown";
         }
 
-        public void Parse(string uas, DataTables dts)
+        public UserAgentStringInfo(Robot robot, OS os)
         {
-            //First Robot
-            Robot robot = null;
-            foreach (Robot r in DataTables.Robots.Values)
+            Type = "Robot";
+            UAName = robot.Name;
+            UAFamily = robot.Family;
+            UACompany = robot.Company;
+            UAUrl = robot.URL;
+            ua_info_url = robot.InfoURL;
+            UACompanyUrl = robot.CompanyURL;
+            ua_icon = robot.Icon;
+
+            if (os != null)
             {
-                if (uas.CompareTo(r.UserAgentString) == 0)
-                {
-                    robot = r;
-                    break;
-                }
-            }
-
-            if (robot != null)
-            {
-                isRobot = true;
-                type = "Robot";
-                ua_name = robot.Name;
-                ua_family = robot.Family;
-                ua_company = robot.Company;
-                ua_url = robot.URL;
-                ua_info_url = robot.InfoURL;
-                ua_company_url = robot.CompanyURL;
-                ua_icon = robot.Icon;
-
-                //OSINFO for Robot
-                if (robot.OsID != "" && robot.OsID != null)
-                {
-                    int osid;
-                    if (int.TryParse(robot.OsID, out osid))
-                    {
-                        OS os = DataTables.Oss[osid];
-                        os_company = os.Company;
-                        os_company_url = os.CompanyURL;
-                        os_family = os.Family;
-                        os_icon = os.Icon;
-                        os_name = os.Name;
-                        os_url = os.URL;
-                    }
-                }
-
-
-            }
-            else //ELSE ->
-            {
-
-                //BrowserReg
-                Browser browser = null;
-                foreach (KeyValuePair<int, BrowserReg> br in DataTables.BrowserRegs)
-                {
-                    try
-                    {
-                        PerlRegExpConverter prec = new PerlRegExpConverter(br.Value.RegString, null, Encoding.ASCII);
-                        Regex r = prec.Regex;
-                        //Regex r = new Regex(br.Value.RegString);
-                        Match m = r.Match(uas);
-                        if (m.Success)
-                        {
-                            GroupCollection gc = m.Groups;
-
-                            browser = DataTables.Browsers[br.Value.BrowserID];
-                            foreach (Group g in gc)
-                            {
-                                string v = null;
-                                double version;
-                                if (double.TryParse(g.Value.Replace(".", ""), out version))
-                                    v = g.Value;
-
-                                if (v != null)
-                                {
-
-                                    ua_name = " " + v;
-                                    break;
-                                }
-                                else
-                                    ua_name = "";
-                            }
-
-                            break;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        int i = 0;
-                        i++;
-                    }
-                }
-
-                if (browser != null)
-                {
-                    int t = browser.TypeID;
-                    type = DataTables.BrowserTypes[t].Type;
-                    if (ua_name.CompareTo("unknown") == 0)
-                        ua_name = browser.Name;
-                    else
-                        ua_name = browser.Name + ua_name;
-                    ua_family = browser.Name;
-                    ua_company = browser.Company;
-                    ua_url = browser.URL;
-                    ua_info_url = browser.InfoURL;
-                    ua_company_url = browser.CompanyURL;
-                    ua_icon = browser.Icon;
-
-                    OS os = null;
-                    //Os - first BrowserOS, 
-                    if (DataTables.BrowserOss.ContainsKey(browser.ID))
-                    {
-                        os = DataTables.Oss[DataTables.BrowserOss[browser.ID].OSID];
-                    }
-                    else //else Os regexp
-                    {
-                        foreach (KeyValuePair<int, OSReg> osr in DataTables.OSRegs)
-                        {
-                            try
-                            {
-                                PerlRegExpConverter prec = new PerlRegExpConverter(osr.Value.RegString, null, Encoding.ASCII);
-                                Regex r = prec.Regex;
-                                if (r.IsMatch(uas))
-                                {
-                                    os = DataTables.Oss[osr.Value.OSID];
-                                    break;
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                int i = 0;
-                                i++;
-                            }
-                        }
-                    }
-
-                    if (os != null)
-                    {
-                        os_company = os.Company;
-                        os_company_url = os.CompanyURL;
-                        os_family = os.Family;
-                        os_icon = os.Icon;
-                        os_name = os.Name;
-                        os_url = os.URL;
-                    }
-
-
-
-
-                }
+                OSCompany = os.Company;
+                OSCompanyUrl = os.CompanyURL;
+                OSFamily = os.Family;
+                os_icon = os.Icon;
+                OSName = os.Name;
+                OSUrl = os.URL;
             }
         }
 
+        public UserAgentStringInfo(Browser browser, string browserType, string version, OS os)
+        {
+            Type = browserType;
+            UAFamily = browser.Name;
+            UAName = browser.Name;
+            UACompany = browser.Company;
+            UAUrl = browser.URL;
+            ua_info_url = browser.InfoURL;
+            UACompanyUrl = browser.CompanyURL;
+            ua_icon = browser.Icon;
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                UAName += " " + version;
+            }
+
+            if (os != null)
+            {
+                OSCompany = os.Company;
+                OSCompanyUrl = os.CompanyURL;
+                OSFamily = os.Family;
+                os_icon = os.Icon;
+                OSName = os.Name;
+                OSUrl = os.URL;
+            }
+        }
     }
 }

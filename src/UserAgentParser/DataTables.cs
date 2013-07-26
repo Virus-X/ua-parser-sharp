@@ -47,6 +47,7 @@ namespace UAParserSharp
                 case "[robots]":
                     return ParserState.Robot;
             }
+
             return ParserState.Unknown;
         }
 
@@ -59,26 +60,32 @@ namespace UAParserSharp
 
             while ((line = sr.ReadLine()) != null)
             {
-                //comments
+                // comments
                 if (line.StartsWith(";"))
+                {
                     continue;
-                //table name
+                }
+
+                // table name
                 if (line.StartsWith("["))
                 {
                     newstate = GetState(line.Trim());
-                    //
+
                     if (newstate != ParserState.Unknown)
+                    {
                         if (oldstate != ParserState.Unknown && newstate != oldstate)
                         {
-                            //LoadData Of Corresponding state
-                            CreateDictionary(oldstate, sb.ToString());
+                            // LoadData Of Corresponding state
+                            LoadTableData(oldstate, sb.ToString());
                             oldstate = newstate;
                             sb.Clear(); //.NET 4.0 method
                             //sb.Length = 0; //.NET 2.0+ method
-
                         }
                         else
+                        {
                             oldstate = newstate;
+                        }
+                    }
                 }
                 else
                 {
@@ -88,7 +95,7 @@ namespace UAParserSharp
 
             if (sb.Length > 0)
             {
-                CreateDictionary(oldstate, sb.ToString());
+                LoadTableData(oldstate, sb.ToString());
             }
         }
 
@@ -96,7 +103,7 @@ namespace UAParserSharp
         {
             List<string> list = new List<string>();
             StringReader sr = new StringReader(data);
-            string line = "";
+            string line;
             StringBuilder sb = new StringBuilder();
             int i = 0;
             while ((line = sr.ReadLine()) != null)
@@ -118,15 +125,17 @@ namespace UAParserSharp
             }
 
             if (!string.IsNullOrEmpty(sb.ToString().Trim()))
+            {
                 list.Add(sb.ToString());
+            }
+
             return list.ToArray();
         }
 
         //This is ugly
-        public static void CreateDictionary(ParserState state, string data)
-        {            
+        private static void LoadTableData(ParserState state, string data)
+        {
             UserAgentItem uai;
-            string[] dataSpliced = null;
 
             switch (state)
             {
@@ -162,9 +171,9 @@ namespace UAParserSharp
                     return;
             }
 
-            dataSpliced = Chop(data, uai.GetNumberItems());
-            //Figure out what to create....... 
+            var dataSpliced = Chop(data, uai.GetNumberItems());
 
+            // Figure out what to create....... 
             foreach (string d in dataSpliced)
             {
                 switch (state)

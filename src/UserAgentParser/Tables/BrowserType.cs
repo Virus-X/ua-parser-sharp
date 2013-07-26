@@ -1,5 +1,4 @@
-﻿
-namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentStringLibrary.Tables
 {
     public class BrowserType : UserAgentItem
     {

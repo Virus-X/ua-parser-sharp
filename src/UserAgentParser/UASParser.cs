@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+
+using UserAgentStringLibrary.Tables;
+using UserAgentStringLibrary.Util;
 
 /*
  * Created by Adam Abonyi
@@ -202,9 +207,76 @@ namespace UAParserSharp
         /// <returns>UASrt - information about the UAS</returns>
         public UserAgentStringInfo Parse(string uas)
         {
-            UserAgentStringInfo uasrt = new UserAgentStringInfo();
-            uasrt.Parse(uas, dataTable);
-            return uasrt;
+            Robot robot = DataTables.Robots.Values.FirstOrDefault(x => x.UserAgentString == uas);
+
+            if (robot != null)
+            {
+                var robotOs = robot.OsID.HasValue && DataTables.Oss.ContainsKey(robot.OsID.Value)
+                             ? DataTables.Oss[robot.OsID.Value]
+                             : null;
+                return new UserAgentStringInfo(robot, robotOs);
+            }
+
+            var browserRes = DetectBrowser(uas);
+
+            if (browserRes == null)
+            {
+                return new UserAgentStringInfo();
+            }
+
+            Browser browser = browserRes.Item1;
+            int t = browser.TypeID;
+            var browserType = DataTables.BrowserTypes[t].Type;
+
+            OS os = null;
+            if (DataTables.BrowserOss.ContainsKey(browser.ID))
+            {
+                os = DataTables.Oss[DataTables.BrowserOss[browser.ID].OSID];
+            }
+            else
+            {
+                foreach (var osr in DataTables.OSRegs.Values)
+                {
+                    PerlRegExpConverter prec = new PerlRegExpConverter(osr.RegString, null, Encoding.ASCII);
+                    Regex r = prec.Regex;
+                    if (r.IsMatch(uas))
+                    {
+                        os = DataTables.Oss[osr.OSID];
+                        break;
+                    }
+                }
+            }
+
+            return new UserAgentStringInfo(browser, browserType, browserRes.Item2, os);
+        }
+
+        private static Tuple<Browser, string> DetectBrowser(string uas)
+        {
+            foreach (var br in DataTables.BrowserRegs.Values)
+            {
+                PerlRegExpConverter prec = new PerlRegExpConverter(br.RegString, null, Encoding.ASCII);
+                Regex r = prec.Regex;
+                Match m = r.Match(uas);
+                if (m.Success)
+                {
+                    GroupCollection gc = m.Groups;
+
+                    var browser = DataTables.Browsers[br.BrowserID];
+                    foreach (Group g in gc)
+                    {
+                        double version;
+                        if (double.TryParse(g.Value.Replace(".", string.Empty), out version))
+                        {
+                            var versionString = g.Value;
+                            return new Tuple<Browser, string>(browser, versionString);
+                        }
+                    }
+
+                    return new Tuple<Browser, string>(browser, null);
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -246,7 +318,10 @@ namespace UAParserSharp
         {
             string s;
             using (StreamReader sr = new StreamReader(localFilePath))
+            {
                 s = sr.ReadToEnd();
+            }
+
             LoadDataFile(s);
         }
 
@@ -265,20 +340,22 @@ namespace UAParserSharp
                 if (DataCorrect(data))
                 {
                     using (StreamWriter output = new StreamWriter(localFilePath))
+                    {
                         output.Write(data);
+                    }
+
                     return true;
                 }
-                else
-                {
-                    //D.A. added this error check
-                    error += string.Format("Error: \r\n Message: {0}\r\n Stack Trace: {1}\r\n", "Data validation failed.", string.Empty);
-                }
+
+                //D.A. added this error check
+                error += string.Format("Error: \r\n Message: {0}\r\n Stack Trace: {1}\r\n", "Data validation failed.", string.Empty);
             }
             catch (Exception e)
             {
                 error += string.Format("Error: \r\n Message: {0}\r\n Stack Trace: {1}\r\n", e.Message, e.StackTrace);
                 return false;
             }
+
             return false;
         }
 
@@ -291,8 +368,7 @@ namespace UAParserSharp
         private DateTime ParseVersion(string version)
         {
             string date = version.Split('-')[0];
-            return DateTime.ParseExact(date, "yyyyMMdd",
-                    CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal);
+            return DateTime.ParseExact(date, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal);
         }
 
         /// <summary>
@@ -308,23 +384,12 @@ namespace UAParserSharp
             DateTime paramversion = ParseVersion(version);
             int paramnum = int.Parse(version.Split('-')[1]);
 
-            if (paramversion > thisversion)
+            if (paramversion > thisversion || (paramversion == thisversion && paramnum > thisnum))
+            {
                 return true;
-
-            if (paramversion == thisversion)
-                if (paramnum > thisnum)
-                    return true;
+            }
 
             return false;
-        }
-
-        /// <summary>
-        /// Gets the data file version from the local data file content
-        /// </summary>
-        /// <returns>Version string of currently loaded data file</returns>
-        private string GetDataVersionString()
-        {
-            return GetDataVersionString(Data);
         }
 
         /// <summary>
@@ -336,8 +401,10 @@ namespace UAParserSharp
         {
             Regex re = new Regex("Version: [0-9]{8}-[0-9]{2}");
             Match m = re.Match(d.Substring(0, 150));
-            if (m != null)
+            if (m.Success)
+            {
                 return m.Value.Split(':')[1];
+            }
 
             return null;
         }
@@ -369,39 +436,6 @@ namespace UAParserSharp
         }
 
         /// <summary>
-        /// Sends a request to the url specified in the parameter
-        /// </summary>
-        /// <param name="surl">URL in string form</param>
-        /// <param name="request">Aditional data for the webrequest</param>
-        /// <returns>Response of the webrequest</returns>
-        private string SendRequest(string surl, string request)
-        {
-            //Create WebRequest            
-            Uri url = new Uri(surl);
-            WebRequest req = WebRequest.Create(url);
-            req.Method = "POST";
-            req.ContentType = "application/xml";
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            byte[] data = encoding.GetBytes(request);
-            req.ContentLength = data.Length;
-
-            //CreateStream and send request
-            Stream newStream = req.GetRequestStream();
-            newStream.Write(data, 0, data.Length);
-            newStream.Close();
-
-            //Gets Response  
-            WebResponse res = req.GetResponse();
-            long len = res.ContentLength;
-            newStream = res.GetResponseStream();
-            StreamReader sr = new StreamReader(newStream);
-            string s = sr.ReadToEnd();
-
-
-            return s;
-        }
-
-        /// <summary>
         /// Gets the Newest version of the datafile on 
         /// the UAS Parser website
         /// </summary>
@@ -422,12 +456,13 @@ namespace UAParserSharp
             bool getUpdatedData = false;
             try
             {
-                //check if file exists
+                // check if file exists
                 if (File.Exists(localFilePath))
                 {
-                    //load file info
+                    // load file info
                     FileInfo dataFile = new FileInfo(localFilePath);
-                    //get the tiem difference for use in calculating if call to get new data is required
+
+                    // get the tiem difference for use in calculating if call to get new data is required
                     TimeSpan ts = DateTime.Now.Subtract(dataFile.CreationTime);
                     double TotalMins = Math.Abs(ts.TotalMinutes);
                     double TotalDays = Math.Abs(ts.TotalDays);
@@ -435,28 +470,28 @@ namespace UAParserSharp
                     switch (schedule)
                     {
                         case ScheduleType.Quarter_Hourly:
-                            getUpdatedData = (TotalMins >= 15);
+                            getUpdatedData = TotalMins >= 15;
                             break;
                         case ScheduleType.Half_Hourly:
-                            getUpdatedData = (TotalMins >= 30);
+                            getUpdatedData = TotalMins >= 30;
                             break;
                         case ScheduleType.Hourly:
-                            getUpdatedData = (TotalMins >= 60);
+                            getUpdatedData = TotalMins >= 60;
                             break;
                         case ScheduleType.Half_Daily:
-                            getUpdatedData = (TotalMins >= 720);
+                            getUpdatedData = TotalMins >= 720;
                             break;
                         case ScheduleType.Daily:
-                            getUpdatedData = (TotalDays >= 1);
+                            getUpdatedData = TotalDays >= 1;
                             break;
                         case ScheduleType.Weekly:
-                            getUpdatedData = (TotalDays >= 7);
+                            getUpdatedData = TotalDays >= 7;
                             break;
                         case ScheduleType.Monthly:
-                            getUpdatedData = (DateTime.Now.Year > dataFile.CreationTime.Year || DateTime.Now.Month > dataFile.CreationTime.Month);
+                            getUpdatedData = DateTime.Now.Year > dataFile.CreationTime.Year || DateTime.Now.Month > dataFile.CreationTime.Month;
                             break;
                         case ScheduleType.Yearly:
-                            getUpdatedData = (DateTime.Now.Year > dataFile.CreationTime.Year);
+                            getUpdatedData = DateTime.Now.Year > dataFile.CreationTime.Year;
                             break;
                     }
                 }

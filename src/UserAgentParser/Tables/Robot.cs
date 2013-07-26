@@ -6,7 +6,7 @@
 
         public string Family { get; private set; }
 
-        public string OsID { get; private set; }
+        public int? OsID { get; private set; }
 
         public string InfoURL { get; private set; }
 
@@ -33,7 +33,14 @@
             Company = fields[4];
             CompanyURL = fields[5];
             Icon = fields[6];
-            OsID = fields[7];
+
+
+            int osid;
+            if (int.TryParse(fields[7], out osid))
+            {
+                OsID = osid;
+            }
+
             InfoURL = fields[8];
         }
     }

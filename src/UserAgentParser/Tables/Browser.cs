@@ -1,6 +1,4 @@
-﻿
-
-namespace UserAgentStringLibrary.Tables
+﻿namespace UserAgentStringLibrary.Tables
 {
     public class Browser : UserAgentCommon
     {
