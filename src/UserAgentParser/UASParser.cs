@@ -37,18 +37,7 @@ namespace UAParserSharp
         private static string localFileName = "data.dat";
         private static bool refresh = false; //D.A. define global refresh parameter to force reload of data
         private static string error = string.Empty; //D.A. Error message parameter
-        private static ScheduleType schedule; //D.A. schedule enum parameter
-
-        //More config file information
-        private static string versionURL = @"http://user-agent-string.info/rpc/get_data.php?key=free&format=ini&ver=y";
-        private static string iniFileURL = @"http://user-agent-string.info/rpc/get_data.php?key=free&format=ini";
-
-        //Paths 
-        public static readonly Uri UAImagesURL = new Uri(@"http://user-agent-string.info/pub/img/ua/");
-
-        public static readonly Uri OSImagesURL = new Uri(@"http://user-agent-string.info/pub/img/os/");
-
-        public static readonly Uri UserAgentStringURL = new Uri(@"http://user-agent-string.info/");
+        private static ScheduleType schedule; //D.A. schedule enum parameter        
 
         private static DataTables dataTable;
 
@@ -333,7 +322,7 @@ namespace UAParserSharp
         /// </summary>
         private bool FetchDataFile()
         {
-            string data = SendRequest(iniFileURL);
+            string data = SendRequest(Constants.IniFileUrl);
             LoadDataFile(data);
 
             try
@@ -443,7 +432,7 @@ namespace UAParserSharp
         /// <returns>Verison string</returns>
         public string GetNewestVersion()
         {
-            return SendRequest(versionURL);
+            return SendRequest(Constants.VersionUrl);
         }
 
         /// <summary>

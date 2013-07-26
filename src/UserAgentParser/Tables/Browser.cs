@@ -6,7 +6,7 @@ namespace UserAgentStringLibrary.Tables
 {
     public class Browser : UserAgentCommon
     {
-        public static readonly Uri UnknownIconUrl = new Uri(UASParser.UAImagesURL, "unknown.png");
+        public static readonly Uri UnknownIconUrl = new Uri(Constants.UaImagesUrl, "unknown.png");
 
         public int TypeID { get; private set; }
 
@@ -16,13 +16,13 @@ namespace UserAgentStringLibrary.Tables
         {
             get
             {
-                return string.IsNullOrEmpty(Icon) ? UnknownIconUrl : new Uri(UASParser.UAImagesURL, Icon);
+                return string.IsNullOrEmpty(Icon) ? UnknownIconUrl : new Uri(Constants.UaImagesUrl, Icon);
             }
         }
 
         public Uri InfoUrl
         {
-            get { return new Uri(UASParser.UserAgentStringURL, string.IsNullOrEmpty(InfoURL) ? "unknown" : InfoURL); }
+            get { return new Uri(Constants.UserAgentStringUrl, string.IsNullOrEmpty(InfoURL) ? "unknown" : InfoURL); }
         }
 
         public override int GetNumberItems()

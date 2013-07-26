@@ -6,7 +6,7 @@ namespace UserAgentStringLibrary.Tables
 {
     public class OS : UserAgentCommon
     {
-        public static readonly Uri UnknownIconUrl = new Uri(UASParser.OSImagesURL, "unknown.png");
+        public static readonly Uri UnknownIconUrl = new Uri(Constants.OSImagesUrl, "unknown.png");
 
         public string Family { get; private set; }
 
@@ -14,7 +14,7 @@ namespace UserAgentStringLibrary.Tables
         {
             get
             {
-                return string.IsNullOrEmpty(Icon) ? UnknownIconUrl : new Uri(UASParser.OSImagesURL, Icon);
+                return string.IsNullOrEmpty(Icon) ? UnknownIconUrl : new Uri(Constants.OSImagesUrl, Icon);
             }
         }
 

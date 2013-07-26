@@ -82,14 +82,14 @@ namespace UserAgentParser.Tests
         public void Parse_UnknownString_UserAgentIconPointsToUnknownPng()
         {
             var res = parser.Parse("???");
-            Assert.AreEqual(new Uri(UASParser.UAImagesURL, "unknown.png"), res.UserAgent.IconUrl);
+            Assert.AreEqual(new Uri(Constants.UaImagesUrl, "unknown.png"), res.UserAgent.IconUrl);
         }
 
         [Test]
         public void Parse_UnknownString_OsIconPointsToUnknownPng()
         {
             var res = parser.Parse("???");
-            Assert.AreEqual(new Uri(UASParser.OSImagesURL, "unknown.png"), res.OS.IconUrl);
+            Assert.AreEqual(new Uri(Constants.OSImagesUrl, "unknown.png"), res.OS.IconUrl);
         }
     }
 }
